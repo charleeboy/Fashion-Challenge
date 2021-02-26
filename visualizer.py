@@ -1,7 +1,9 @@
 import  numpy as np
 import matplotlib.pyplot as plt
-import hiddenlayer as h1
-#import plotly.graph_objs as go
+from sklearn.metrics import  classification_report, confusion_matrix
+from itertools import *
+import itertools
+
 class Visualizer: 
     def __init__(self, epochs):
         self.epochs = epochs
@@ -141,11 +143,40 @@ class Visualizer:
         ax2.set_xlabel('Epoch')
         ax2.set_ylabel('accuracy')
         ax2.legend(loc='upper right')
-        
-        
-        
+    
         plt.show()
 
-    
+    #PLOT THE CONFUSION MATRIX
+    def plot_confusion_matrix(self, cm, classes,
+                                normalize=False,
+                                title='Confusion matrix',
+                                cmap=plt.cm.Blues):
+
+        plt.imshow(cm, interpolation='nearest', cmap=cmap)
+        plt.title(title)
+        plt.colorbar()
+        tick_marks = np.arange(len(classes))
+        plt.xticks(tick_marks, classes, rotation=90)
+        plt.yticks(tick_marks, classes)
+
+        if normalize:
+            cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+        thresh = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            plt.text(j, i, cm[i, j],
+                    horizontalalignment="center",
+                    color="white" if cm[i, j] > thresh else "black")
+
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+    #PLOT THE CONFUSION MATRIX COMPARING PREDICTION AND TRUE CLASSES
+    def get_confusionMatrix(self, y_pred, y_test):
+        y_pred_classes = np.argmax(y_pred, axis=1)
+        y_true = np.argmax(y_test, axis=1)
+        conf_matrix = confusion_matrix(y_true, y_pred_classes)
+        self.plot_confusion_matrix(conf_matrix, classes=[
+                                   'T-shirt/Top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle Boot'])
 
     

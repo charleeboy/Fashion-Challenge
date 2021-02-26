@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import  classification_report, confusion_matrix
 from itertools import *
 import itertools
+import hiddenlayer as h1
 
 class Visualizer: 
     def __init__(self, epochs):
@@ -179,4 +180,10 @@ class Visualizer:
         self.plot_confusion_matrix(conf_matrix, classes=[
                                    'T-shirt/Top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle Boot'])
 
+    def get_graph_model(self, model, test_sample):
+        transforms = [h1.transforms.Prune('Constant')]
+        graph = h1.build_graph(model, test_sample, transforms=transforms)
+        graph.theme = h1.graph.THEMES['blue'].copy()
+        graph.save('hiddenlayers', format='png')
+        return graph
     
